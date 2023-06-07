@@ -7,4 +7,8 @@ build_property.PublishSingleFile =
 build_property.IncludeAllContentForSelfExtract = 
 build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
 build_property.RootNamespace = Heist2Group
+<<<<<<< HEAD
 build_property.ProjectDir = c:\Users\curtw\workspace\csharp\exercises\Heist2-Group\
+=======
+build_property.ProjectDir = c:\Users\micha\workspace\Heist2-Group\
+>>>>>>> 25526ba438723ef3dc74a471afee4bb92638befe
