@@ -127,13 +127,13 @@ namespace Heist2Group
                 }
             }
             Bank randomBank = new Bank
-                {
-                    AlarmScore = new Random().Next(0,100),
-                    VaultScore = new Random().Next(0,100),
-                    SecurityGuardScore = new Random().Next(0,100),
-                    CashOnHand = new Random().Next(50000,1000000)
-                };
-            
+            {
+                AlarmScore = new Random().Next(0, 100),
+                VaultScore = new Random().Next(0, 100),
+                SecurityGuardScore = new Random().Next(0, 100),
+                CashOnHand = new Random().Next(50000, 1000000)
+            };
+
             Dictionary<string, int> scoreName = new Dictionary<string, int>()
             {
                 {"Alarm Score",randomBank.AlarmScore},
@@ -142,7 +142,7 @@ namespace Heist2Group
             };
 
             int maxScore = Math.Max(randomBank.AlarmScore, Math.Max(randomBank.VaultScore, randomBank.SecurityGuardScore));
-            int minScore =  Math.Min(randomBank.AlarmScore, Math.Min(randomBank.VaultScore, randomBank.SecurityGuardScore));
+            int minScore = Math.Min(randomBank.AlarmScore, Math.Min(randomBank.VaultScore, randomBank.SecurityGuardScore));
 
             string mostSecureScore = "";
             string leastSecureScore = "";
@@ -161,7 +161,29 @@ namespace Heist2Group
 
             Console.WriteLine($"Most Secure Score: {mostSecureScore}");
             Console.WriteLine($"Least Secure Score: {leastSecureScore}");
-            
+
+            Console.WriteLine("Select your Robbers");
+            string continueSelection = "y";
+
+            List<IRobber> Crew = new List<IRobber>();
+
+            while (continueSelection == "y")
+            {
+                int i = 1;
+                foreach (IRobber r in Rolodex)
+                {
+                    Console.WriteLine($" {i} Name: {r.Name}, Specialty: {r.Profession}, Skill Level: {r.SkillLevel}, Cut: {r.PercentageCut}");
+                    i++;
+                }
+                Console.WriteLine("Enter the corresponding number for the Robber: ");
+                int robberNumber = int.Parse(Console.ReadLine());
+                Crew.Add(Rolodex[robberNumber - 1]);
+                Rolodex.RemoveAt(robberNumber - 1);
+                Console.WriteLine("Would you like to select more Robbers? Y/N");
+                continueSelection = Console.ReadLine().ToLower();
+            }
+
+
 
 
         }
