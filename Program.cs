@@ -6,16 +6,17 @@ namespace Heist2Group
     {
         static void Main(string[] args)
         {
+            //new members
             Hacker Hacks = new Hacker()
             {
                 Name = "Hacks",
-                SkillLevel = 50,
+                SkillLevel = 100,
                 PercentageCut = 30
             };
             Muscles Brawn = new Muscles()
             {
                 Name = "Biggun",
-                SkillLevel = 20,
+                SkillLevel = 100,
                 PercentageCut = 40
             };
             LockSpecialist John = new LockSpecialist()
@@ -45,7 +46,7 @@ namespace Heist2Group
             string answer = Console.ReadLine().ToLower();
             while (answer == "y")
             {
-                NewCharacter();
+                Rolodex.Add(NewCharacter());
                 Console.Write("Would you like to make a new character? Y/N: ");
                 answer = Console.ReadLine().ToLower();
             }
@@ -96,8 +97,6 @@ namespace Heist2Group
                             Name = newName,
                             SkillLevel = int.Parse(skillLevel),
                             PercentageCut = int.Parse(percCut)
-
-
                         };
 
                     case "2":
@@ -166,26 +165,67 @@ namespace Heist2Group
             string continueSelection = "y";
 
             List<IRobber> Crew = new List<IRobber>();
+            int totalPercentageCut = 100;
 
-            while (continueSelection == "y")
+            List<int> robbersTooExpensive = new List<int>();
+
+            while (continueSelection == "y" && totalPercentageCut > 0)
             {
                 int i = 1;
                 foreach (IRobber r in Rolodex)
                 {
-                    Console.WriteLine($" {i} Name: {r.Name}, Specialty: {r.Profession}, Skill Level: {r.SkillLevel}, Cut: {r.PercentageCut}");
+                    if (r.PercentageCut <= totalPercentageCut)
+                    {
+                        Console.WriteLine($" {i} Name: {r.Name}, Specialty: {r.Profession}, Skill Level: {r.SkillLevel}, Cut: {r.PercentageCut}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($" {i} Sorry, but {r.Name} is too expensive.");
+                        robbersTooExpensive.Add(i);
+                    }
                     i++;
                 }
                 Console.WriteLine("Enter the corresponding number for the Robber: ");
                 int robberNumber = int.Parse(Console.ReadLine());
+                while (robbersTooExpensive.Contains(robberNumber))
+                {
+                    Console.WriteLine("That person is too expensive! Select another.");
+                    robberNumber = int.Parse(Console.ReadLine());
+                }
                 Crew.Add(Rolodex[robberNumber - 1]);
+                totalPercentageCut -= Rolodex[robberNumber - 1].PercentageCut;
                 Rolodex.RemoveAt(robberNumber - 1);
+                //remember to remove final question if no viable crew members
                 Console.WriteLine("Would you like to select more Robbers? Y/N");
                 continueSelection = Console.ReadLine().ToLower();
             }
+            // Perform the skills of each crew member on the bank
+            foreach (IRobber crewMember in Crew)
+            {
+                crewMember.PerformSkill(randomBank);
+            }
 
+            // Evaluate if the bank is secure
+            if (randomBank.IsSecure)
+            {
+                Console.WriteLine("Heist failed. The bank's security system is still active.");
+            }
+            else
+            {
+                //keeps track of money
+                int myTake = randomBank.CashOnHand;
+                float myTakeFloat = (float)myTake;
 
-
-
+                Console.WriteLine("Heist successful!");
+                Console.Write("Hey, this is a report:");
+                foreach (IRobber crewMember in Crew)
+                {
+                    float money = (float)crewMember.PercentageCut / 100 * (float)randomBank.CashOnHand;
+                    Console.WriteLine($"{crewMember.Name} received ${money}");
+                    myTakeFloat -= money;
+                }
+                Console.WriteLine($"Your take is ${myTakeFloat}");
+            }
         }
     }
 }
