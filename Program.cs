@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+
 namespace Heist2Group
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //new members
+            // Create initial crew members
             Hacker Hacks = new Hacker()
             {
                 Name = "Hacks",
@@ -37,19 +38,28 @@ namespace Heist2Group
                 SkillLevel = 65,
                 PercentageCut = 5
             };
+
+            // Create a list of crew members
             List<IRobber> Rolodex = new List<IRobber>()
             {
                 Hacks, Brawn, John, Swaggins, Beef
             };
+
             Console.WriteLine($"{Rolodex.Count}");
+
+            // Prompt user to create new characters
             Console.Write("Would you like to make a new character? Y/N: ");
             string answer = Console.ReadLine().ToLower();
+
+            // Loop for creating new characters
             while (answer == "y")
             {
                 Rolodex.Add(NewCharacter());
                 Console.Write("Would you like to make a new character? Y/N: ");
                 answer = Console.ReadLine().ToLower();
             }
+
+            // Method to create a new character
             IRobber NewCharacter()
             {
                 Console.Write("What is your new character's name? : ");
@@ -64,7 +74,7 @@ namespace Heist2Group
                 2) Muscles
                 3) Lock Specialist
                 : ");
-                string specialtyNumber = Console.ReadLine(); //need to be parsed to int on construction of object
+                string specialtyNumber = Console.ReadLine(); //needs to be parsed to int on construction of object
                 while (String.IsNullOrEmpty(specialtyNumber))
                 {
                     Console.Write(@"Try again... pleb: 
@@ -91,14 +101,12 @@ namespace Heist2Group
                 switch (specialtyNumber)
                 {
                     case "1":
-
                         return new Hacker()
                         {
                             Name = newName,
                             SkillLevel = int.Parse(skillLevel),
                             PercentageCut = int.Parse(percCut)
                         };
-
                     case "2":
                         return new Muscles()
                         {
@@ -106,7 +114,6 @@ namespace Heist2Group
                             SkillLevel = int.Parse(skillLevel),
                             PercentageCut = int.Parse(percCut)
                         };
-
                     case "3":
                         return new LockSpecialist()
                         {
@@ -114,7 +121,6 @@ namespace Heist2Group
                             SkillLevel = int.Parse(skillLevel),
                             PercentageCut = int.Parse(percCut)
                         };
-
                     default:
                         Console.WriteLine("You Suck, We'll give you a crew member.");
                         return new Muscles()
@@ -125,6 +131,8 @@ namespace Heist2Group
                         };
                 }
             }
+
+            // Create a bank with random scores and cash on hand
             Bank randomBank = new Bank
             {
                 AlarmScore = new Random().Next(0, 100),
@@ -133,6 +141,7 @@ namespace Heist2Group
                 CashOnHand = new Random().Next(50000, 1000000)
             };
 
+            // Store bank scores in a dictionary
             Dictionary<string, int> scoreName = new Dictionary<string, int>()
             {
                 {"Alarm Score",randomBank.AlarmScore},
@@ -140,6 +149,7 @@ namespace Heist2Group
                 {"Security Guard Score", randomBank.SecurityGuardScore}
             };
 
+            // Find the most secure and least secure score
             int maxScore = Math.Max(randomBank.AlarmScore, Math.Max(randomBank.VaultScore, randomBank.SecurityGuardScore));
             int minScore = Math.Min(randomBank.AlarmScore, Math.Min(randomBank.VaultScore, randomBank.SecurityGuardScore));
 
@@ -169,6 +179,7 @@ namespace Heist2Group
 
             List<int> robbersTooExpensive = new List<int>();
 
+            // Loop for selecting crew members
             while (continueSelection == "y" && totalPercentageCut > 0)
             {
                 int i = 1;
@@ -199,6 +210,7 @@ namespace Heist2Group
                 Console.WriteLine("Would you like to select more Robbers? Y/N");
                 continueSelection = Console.ReadLine().ToLower();
             }
+
             // Perform the skills of each crew member on the bank
             foreach (IRobber crewMember in Crew)
             {
@@ -212,7 +224,7 @@ namespace Heist2Group
             }
             else
             {
-                //keeps track of money
+                // Calculate and display the total earnings
                 int myTake = randomBank.CashOnHand;
                 float myTakeFloat = (float)myTake;
 
