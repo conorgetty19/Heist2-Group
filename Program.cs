@@ -171,16 +171,15 @@ namespace Heist2Group
             Console.WriteLine($"Most Secure Score: {mostSecureScore}");
             Console.WriteLine($"Least Secure Score: {leastSecureScore}");
 
-            Console.WriteLine("Select your Robbers");
-            string continueSelection = "y";
-
             List<IRobber> Crew = new List<IRobber>();
             int totalPercentageCut = 100;
 
             List<int> robbersTooExpensive = new List<int>();
 
+            bool validRobberSelection = true;
+
             // Loop for selecting crew members
-            while (continueSelection == "y" && totalPercentageCut > 0)
+            while (validRobberSelection && totalPercentageCut > 0)
             {
                 int i = 1;
                 foreach (IRobber r in Rolodex)
@@ -196,8 +195,14 @@ namespace Heist2Group
                     }
                     i++;
                 }
-                Console.WriteLine("Enter the corresponding number for the Robber: ");
-                int robberNumber = int.Parse(Console.ReadLine());
+                Console.WriteLine("Enter the corresponding number to add a Robber to your crew: ");
+                string robberNumberAsString = Console.ReadLine();
+                if (robberNumberAsString == "")
+                {
+                    validRobberSelection = false;
+                    break;
+                }
+                int robberNumber = int.Parse(robberNumberAsString);
                 while (robbersTooExpensive.Contains(robberNumber))
                 {
                     Console.WriteLine("That person is too expensive! Select another.");
@@ -206,9 +211,6 @@ namespace Heist2Group
                 Crew.Add(Rolodex[robberNumber - 1]);
                 totalPercentageCut -= Rolodex[robberNumber - 1].PercentageCut;
                 Rolodex.RemoveAt(robberNumber - 1);
-                //remember to remove final question if no viable crew members
-                Console.WriteLine("Would you like to select more Robbers? Y/N");
-                continueSelection = Console.ReadLine().ToLower();
             }
 
             // Perform the skills of each crew member on the bank
